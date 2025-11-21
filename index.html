@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="km">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Bio Link</title>
+    <!-- ប្រើ Font ខ្មែរ -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hanuman:wght@400;700&family=Outfit:wght{400;700}&display=swap"
+      rel="stylesheet"
+    />
+    <!-- ប្រើ Icon ពី FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      /* --- កំណត់ទូទៅ --- */
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Hanuman", "Outfit", sans-serif;
+        color: white;
+        height: 100vh;
+        overflow: hidden; /* មិនឱ្យ Scroll ពេញ Page, Scroll តែក្នុងប្រអប់ */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1a1a2e; /* ពណ៌ជំនួយបើវីដេអូដើរមិនទាន់ */
+      }
+
+      /* --- 1. វីដេអូ Background --- */
+      .video-bg {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -2; /* ត្រូវនៅពីក្រោយអ្វីៗទាំងអស់ */
+        object-fit: cover;
+        filter: brightness(0.5); /* ធ្វើឱ្យងងឹត ៥០% ដើម្បីឱ្យឃើញអក្សរច្បាស់ */
+      }
+
+      /* --- 2. ព្រិលធ្លាក់ (SNOW FALLING EFFECT) --- */
+      .snow-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1; /* នៅពីមុខវីដេអូ, ក្រោយ Card */
+        pointer-events: none; /* មិនរំខានដល់ការចុចលើ Link */
+      }
+
+      /* រចនាបថមូលដ្ឋានគ្រឹះនៃព្រិល */
+      .snow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Keyframes សម្រាប់ចលនាធ្លាក់ចុះ */
+      @keyframes fall {
+        to {
+          transform: translateY(100vh);
+        }
+      }
+
+      /* Keyframes សម្រាប់ចលនាបោកបក់ផ្ដេក (Shake) */
+      @keyframes shake {
+        0% {
+          margin-left: 0;
+        }
+        50% {
+          margin-left: 50px;
+        }
+        100% {
+          margin-left: 0;
+        }
+      }
+
+      /* ប្រើ Box-Shadows ដើម្បីបង្កើតផ្កាព្រិលច្រើន */
+      .snow:before {
+        content: "";
+        position: absolute;
+        /* ដាក់ Background ពណ៌សតូចមួយនៅខាងលើ (0, -100vh) */
+        background: white;
+        border-radius: 50%;
+
+        /* ព្រិលពិតប្រាកដត្រូវបានបង្កើតដោយ box-shadows វែង */
+      }
+
+      /* Layer 1: ធំជាង លឿនជាង ជិតជាង */
+      .snow-layer-1 {
+        opacity: 0.8;
+        filter: blur(0.5px);
+        animation: fall 15s linear infinite,
+          shake 3s ease-in-out alternate infinite;
+      }
+      .snow-layer-1:before {
+        width: 1.5px;
+        height: 1.5px;
+        box-shadow: 20vw 10vh 1.5px white, 40vw 30vh 1.5px white,
+          10vw 50vh 1.5px white, 90vw 70vh 1.5px white, 5vw 90vh 1.5px white,
+          30vw 5vh 1.5px white, 80vw 25vh 1.5px white, 50vw 45vh 1.5px white,
+          70vw 65vh 1.5px white, 25vw 85vh 1.5px white;
+      }
+
+      /* Layer 2: ទំហំមធ្យម ល្បឿនមធ្យម */
+      .snow-layer-2 {
+        opacity: 0.6;
+        filter: blur(0.3px);
+        animation: fall 20s linear infinite,
+          shake 4s ease-in-out alternate infinite;
+      }
+      .snow-layer-2:before {
+        width: 1px;
+        height: 1px;
+        box-shadow: 10vw 0vh 1px white, 35vw 20vh 1px white, 60vw 40vh 1px white,
+          85vw 60vh 1px white, 15vw 80vh 1px white, 50vw 10vh 1px white,
+          75vw 30vh 1px white, 25vw 50vh 1px white, 90vw 70vh 1px white,
+          5vw 90vh 1px white;
+      }
+
+      /* Layer 3: តូចជាង យឺតជាង ឆ្ងាយជាង */
+      .snow-layer-3 {
+        opacity: 0.4;
+        filter: blur(0.1px);
+        animation: fall 25s linear infinite,
+          shake 5s ease-in-out alternate infinite;
+      }
+      .snow-layer-3:before {
+        width: 0.7px;
+        height: 0.7px;
+        box-shadow: 5vw 15vh 0.7px white, 20vw 35vh 0.7px white,
+          40vw 55vh 0.7px white, 60vw 75vh 0.7px white, 80vw 95vh 0.7px white,
+          95vw 5vh 0.7px white, 70vw 25vh 0.7px white, 30vw 45vh 0.7px white,
+          10vw 65vh 0.7px white, 50vw 85vh 0.7px white;
+      }
+      /* --- បញ្ចប់ប្រសិទ្ធភាពព្រិលធ្លាក់ --- */
+
+      /* --- 3. របារអក្សររត់ (Marquee) - ដាក់ខាងក្រោម --- */
+      .notification-wrapper {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(90deg, #ff00cc, #333399);
+        color: white;
+        z-index: 100;
+        padding: 8px 0;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+      }
+      .marquee {
+        white-space: nowrap;
+        overflow: hidden;
+        position: relative;
+      }
+      .marquee p {
+        display: inline-block;
+        padding-left: 100%;
+        animation: marquee 20s linear infinite;
+        margin: 0;
+        font-weight: bold;
+        font-size: 1rem;
+      }
+      @keyframes marquee {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(-100%, 0);
+        }
+      }
+
+      /* --- 4. ប្រអប់កញ្ចក់ (Glass Container) --- */
+      .glass-card {
+        background: rgba(20, 20, 40, 0.85);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 24px;
+        padding: 40px 20px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+        max-height: 80vh;
+        overflow-y: auto;
+        margin-bottom: 40px;
+        z-index: 1; /* នៅពីលើព្រិល */
+      }
+      .glass-card::-webkit-scrollbar {
+        width: 0px;
+      }
+
+      /* --- 5. Profile & Links (Existing Styles) --- */
+      .profile-container {
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .profile-img {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 20px rgba(255, 0, 204, 0.4);
+        animation: pulse 3s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(255, 0, 204, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 15px rgba(255, 0, 204, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 0, 204, 0);
+        }
+      }
+
+      .username {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 10px 0 5px 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .verify-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(45deg, #00f2ea, #0072ff);
+        color: white;
+        border-radius: 50%;
+        font-size: 0.8rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 15px rgba(0, 242, 234, 0.6);
+        animation: verify-pulse 2s infinite;
+      }
+
+      @keyframes verify-pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(0, 114, 255, 0.7);
+        }
+        70% {
+          box-shadow: 0 0 0 8px rgba(0, 114, 255, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(0, 114, 255, 0);
+        }
+      }
+
+      .bio {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        margin-bottom: 30px;
+      }
+
+      .link-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .link-btn {
+        display: flex;
+        align-items: center;
+        padding: 16px 20px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #333;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .link-btn i {
+        font-size: 1.5rem;
+        width: 30px;
+        margin-right: 10px;
+      }
+
+      .link-btn:hover {
+        transform: translateY(-3px) scale(1.02);
+        color: white;
+      }
+
+      /* Social Media Colors */
+      .fb:hover {
+        background: #1877f2;
+        box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+      }
+      .tg:hover {
+        background: #229ed9;
+        box-shadow: 0 5px 15px rgba(34, 158, 217, 0.4);
+      }
+      .tk:hover {
+        background: black;
+        color: #ff0050;
+        text-shadow: 2px 2px 0px #00f2ea;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+      }
+      .yt:hover {
+        background: #ff0000;
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+      }
+
+      /* --- NEW CONTACT COLORS --- */
+      .phone:hover {
+        background: #008080;
+        box-shadow: 0 5px 15px rgba(0, 128, 128, 0.4);
+      }
+      .email:hover {
+        background: #d9534f;
+        box-shadow: 0 5px 15px rgba(217, 83, 79, 0.4);
+      }
+      .wechat:hover {
+        background: #07a93f;
+        box-shadow: 0 5px 15px rgba(7, 169, 63, 0.4);
+      }
+      .kakao:hover {
+        background: #ffeb00;
+        color: #333;
+        box-shadow: 0 5px 15px rgba(255, 235, 0, 0.4);
+      }
+      .line:hover {
+        background: #00c300;
+        box-shadow: 0 5px 15px rgba(0, 195, 0, 0.4);
+      }
+      .weibo:hover {
+        background: #e6162d;
+        box-shadow: 0 5px 15px rgba(230, 22, 45, 0.4);
+      }
+      /* ------------------------- */
+
+      /* Share Button នៅខាងក្រោម */
+      .share-btn {
+        margin-top: 30px;
+        background: none;
+        border: none;
+        color: white;
+        font-family: "Hanuman", sans-serif;
+        cursor: pointer;
+        opacity: 0.7;
+        font-size: 0.9rem;
+      }
+      .share-btn:hover {
+        opacity: 1;
+        text-decoration: underline;
+      }
+
+      /* Floating Copy Message (ជំនួស Alert) */
+      .copy-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        font-size: 1rem;
+        pointer-events: none;
+      }
+
+      /* --- Footer Copyright --- */
+      .footer-copyright {
+        margin-top: 20px;
+        font-size: 0.75rem;
+        opacity: 0.7;
+        color: rgba(255, 255, 255, 0.8);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 15px;
+        margin-bottom: 10px;
+      }
+
+      /* --- Section Title (ចំណងជើងផ្នែកនីមួយៗ) --- */
+      .section-title {
+        text-align: left;
+        font-size: 1.1rem; /* ទំហំអក្សរ */
+        margin-top: 30px; /* គម្លាតពីខាងលើ */
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-left: 5px;
+      }
+
+      /* --- 6. Video Embed Style --- */
+      .featured-video {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+        overflow: hidden;
+        border-radius: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      .featured-video iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      /* --- 7. Image Carousel --- */
+      .carousel-container {
+        position: relative;
+      }
+      .carousel {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 10px;
+        border-radius: 16px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        scroll-behavior: smooth;
+      }
+      .carousel::-webkit-scrollbar {
+        display: none;
+      }
+      .carousel-item {
+        min-width: 100%;
+        scroll-snap-align: center;
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+      .carousel-item img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.3s ease;
+      }
+      .carousel-item:hover img {
+        transform: scale(1.05);
+      }
+      .carousel-caption {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        color: white;
+      }
+      .carousel-nav {
+        position: absolute;
+        top: 60%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.4);
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 50%;
+        z-index: 5;
+        transition: background 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 35px;
+        height: 35px;
+      }
+      .carousel-nav:hover {
+        background: rgba(0, 0, 0, 0.8);
+      }
+      .prev-btn {
+        left: 10px;
+      }
+      .next-btn {
+        right: 10px;
+      }
+
+      /* --- 8. POPUP Notification --- */
+      .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s ease;
+      }
+      .popup-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .popup-content {
+        background: rgba(20, 20, 35, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(12px);
+        padding: 35px 25px;
+        border-radius: 25px;
+        text-align: center;
+        width: 85%;
+        max-width: 360px;
+        position: relative;
+        transform: scale(0.8);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 0 30px rgba(255, 0, 204, 0.3);
+      }
+      .popup-overlay.active .popup-content {
+        transform: scale(1);
+      }
+      .popup-content h2 {
+        margin: 15px 0 10px;
+        color: #fff;
+        font-size: 1.5rem;
+      }
+      .popup-content p {
+        color: #ccc;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 25px;
+      }
+      .popup-btn {
+        background: linear-gradient(45deg, #ff00cc, #333399);
+        border: none;
+        padding: 12px 30px;
+        color: white;
+        border-radius: 50px;
+        cursor: pointer;
+        font-family: "Hanuman", sans-serif;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 5px 15px rgba(255, 0, 204, 0.3);
+      }
+      .popup-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(255, 0, 204, 0.5);
+      }
+      .close-popup-icon {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: #ddd;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s;
+      }
+      .close-popup-icon:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 1. វីដេអូ Background -->
+    <video autoplay muted loop playsinline class="video-bg">
+      <source
+        src="https://joy1.videvo.net/videvo_files/video/free/2018-01/large_watermarked/171124_H1_006_preview.mp4"
+        type="video/mp4"
+      />
+    </video>
+
+    <!-- 2. ព្រិលធ្លាក់ (SNOW FALLING EFFECT) -->
+    <div class="snow-container">
+      <!-- Layer នីមួយៗមានល្បឿន និងទំហំខុសគ្នាដើម្បីបង្កើតជំរៅ -->
+      <div class="snow snow-layer-1"></div>
+      <div class="snow snow-layer-2"></div>
+      <div class="snow snow-layer-3"></div>
+    </div>
+
+    <!-- 3. POPUP NOTIFICATION -->
+    <div id="popup-overlay" class="popup-overlay">
+      <div class="popup-content">
+        <button class="close-popup-icon" onclick="closePopup()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <!-- Icon សម្រាប់បង្ហាញដំណឹង/ID -->
+        <i class="fa-solid fa-bell fa-3x" style="color: #ff00cc"></i>
+
+        <h2>ដំណឹងពិសេស! 🔥</h2>
+        <p>
+          កុំភ្លេចចុច Follow <strong>Telegram Channel</strong> របស់យើងខ្ញុំ
+          ដើម្បីទទួលបានព័ត៌មានថ្មីៗ និងរង្វាន់ពិសេសមុនគេ!
+        </p>
+
+        <button class="popup-btn" onclick="closePopup()">
+          <i class="fa-solid fa-check"></i> យល់ព្រម
+        </button>
+      </div>
+    </div>
+
+    <!-- 4. ប្រអប់កណ្តាល -->
+    <div class="glass-card">
+      <div class="profile-container">
+        <!-- រូបភាព Profile (ជំនួស Link រូបអ្នកត្រង់នេះ) -->
+        <img
+          src="https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg"
+          alt="Profile"
+          class="profile-img"
+        />
+      </div>
+
+      <div class="username">
+        T i T H
+        <i class="fa-solid fa-check verify-badge" title="Official Account"></i>
+      </div>
+      <div class="bio">អ្នកបង្កើតមាតិកា | Digital Creator 🇰🇭</div>
+
+      <div class="link-group">
+        <!-- Phone -->
+        <a href="tel:+85510797474" class="link-btn phone">
+          <i class="fa-solid fa-phone"></i>
+          <span>ទំនាក់ទំនង (Phone)</span>
+        </a>
+
+        <!-- Email -->
+        <a href="mailto:ptpersonal@kakao.com" class="link-btn email">
+          <i class="fa-solid fa-envelope"></i>
+          <span>អ៊ីមែល (Email)</span>
+        </a>
+
+        <!-- WeChat - ប្រើ modal បង្ហាញ ID & Auto Copy -->
+        <a
+          href="javascript:void(0);"
+          class="link-btn wechat"
+          onclick="showInfoModal('fa-brands fa-weixin fa-3x', 'WeChat ID', 'សូមស្វែងរកខ្ញុំតាមរយៈ WeChat ID: <strong>YourWeChatID</strong>', '@ptpersonal');"
+        >
+          <i class="fa-brands fa-weixin"></i>
+          <span>WeChat ID (Auto Copy)</span>
+        </a>
+
+        <!-- KakaoTalk - ប្រើ modal បង្ហាញ ID & Auto Copy -->
+        <a
+          href="javascript:void(0);"
+          class="link-btn kakao"
+          onclick="showInfoModal('fa-solid fa-comment fa-3x', 'KakaoTalk ID', 'សូមស្វែងរកខ្ញុំតាមរយៈ KakaoTalk ID: <strong>YourKakaoID</strong>', '@ptpersonal');"
+        >
+          <i class="fa-solid fa-comment"></i>
+          <span>KakaoTalk ID (Auto Copy)</span>
+        </a>
+
+        <!-- Line - ប្រើ modal បង្ហាញ ID & Auto Copy -->
+        <a
+          href="javascript:void(0);"
+          class="link-btn line"
+          onclick="showInfoModal('fa-brands fa-line fa-3x', 'LINE ID', 'សូមស្វែងរកខ្ញុំតាមរយៈ LINE ID: <strong>YourLINEID</strong>', '@ptpersonal');"
+        >
+          <i class="fa-brands fa-line"></i>
+          <span>LINE ID (Auto Copy)</span>
+        </a>
+
+        <!-- Weibo -->
+        <a
+          href="https://weibo.com/yourid"
+          target="_blank"
+          class="link-btn weibo"
+        >
+          <i class="fa-brands fa-weibo"></i>
+          <span>Weibo Profile</span>
+        </a>
+
+        <!-- Facebook -->
+        <a
+          href="https://facebook.com/ptpersonal"
+          target="_blank"
+          class="link-btn fb"
+        >
+          <i class="fa-brands fa-facebook"></i>
+          <span>តាមដាន Facebook Page</span>
+        </a>
+
+        <!-- Telegram -->
+        <a href="https://t.me/ptpersonal" target="_blank" class="link-btn tg">
+          <i class="fa-brands fa-telegram"></i>
+          <span>ឆាតមក Telegram</span>
+        </a>
+
+        <!-- TikTok -->
+        <a
+          href="https://tiktok.com/@ptpersonalkh"
+          target="_blank"
+          class="link-btn tk"
+        >
+          <i class="fa-brands fa-tiktok"></i>
+          <span>មើលវីដេអូ TikTok</span>
+        </a>
+
+        <!-- YouTube -->
+        <a href="https://youtube.com" target="_blank" class="link-btn yt">
+          <i class="fa-brands fa-youtube"></i>
+          <span>Subscribe YouTube</span>
+        </a>
+      </div>
+
+      <!-- ចំណងជើងវីដេអូ -->
+      <div class="section-title">
+        <i class="fa-solid fa-clapperboard"></i> វីដេអូពិសេស
+      </div>
+
+      <!-- ផ្នែកវីដេអូថ្មី (Featured Video) -->
+      <div class="featured-video">
+        <iframe
+          src="https://www.youtube.com/embed/LxO-6rlihSg?si=GenericVideoPlaceholder"
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        >
+        </iframe>
+      </div>
+
+      <!-- ផ្នែក Image Carousel (ស្លាយរូបភាព) -->
+      <div class="carousel-container">
+        <div class="section-title">
+          <i class="fa-solid fa-images"></i> រូបភាពកម្រង (Gallery)
+        </div>
+
+        <!-- ប៊ូតុងបញ្ជាឆ្វេងស្តាំ -->
+        <button class="carousel-nav prev-btn" onclick="moveCarousel(-1)">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="carousel-nav next-btn" onclick="moveCarousel(1)">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <div class="carousel" id="galleryCarousel">
+          <!-- រូបទី ១ -->
+          <div class="carousel-item">
+            <img
+              src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop"
+              alt="Image 1"
+            />
+            <div class="carousel-caption">Artwork 1</div>
+          </div>
+          <!-- រូបទី ២ -->
+          <div class="carousel-item">
+            <img
+              src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop"
+              alt="Image 2"
+            />
+            <div class="carousel-caption">Tech Vibes</div>
+          </div>
+          <!-- រូបទី ៣ -->
+          <div class="carousel-item">
+            <img
+              src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500&auto=format&fit=crop"
+              alt="Image 3"
+            />
+            <div class="carousel-caption">My Lifestyle</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="share-btn" onclick="copyLink()">
+        <i class="fa-solid fa-share-nodes"></i> ចែករំលែក Link នេះ
+      </button>
+
+      <!-- Copyright Footer -->
+      <div class="footer-copyright">
+        &copy; 2025 @ptpersonal. All Rights Reserved.<br />
+        Made with ❤️ in Cambodia
+      </div>
+    </div>
+
+    <!-- 5. របារជូនដំណឹង -->
+    <div class="notification-wrapper">
+      <div class="marquee">
+        <p>
+          📢 សួស្តី! សូមស្វាគមន៍មកកាន់ Link របស់ខ្ញុំ! មាន Promotion
+          ពិសេសសម្រាប់ខែនេះ 📩 ចុច Telegram ខាងក្រោមដើម្បីសួរព័ត៌មានបន្ថែម!
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // --- Helper Function: បង្ហាញសារជូនដំណឹងតូចមួយ ---
+      function showTemporaryCopyMessage(text) {
+        const message = document.createElement("div");
+        message.className = "copy-message";
+        message.textContent = text;
+        document.body.appendChild(message);
+
+        setTimeout(() => {
+          message.style.opacity = 1;
+        }, 10);
+
+        setTimeout(() => {
+          message.style.opacity = 0;
+          message.addEventListener("transitionend", () => message.remove());
+        }, 2000);
+      }
+
+      // --- មុខងារសម្រាប់បង្ហាញ Popup/Modal ថ្មី (បន្ថែមមុខងារ Auto Copy) ---
+      function showInfoModal(
+        iconClass,
+        title,
+        message,
+        copyValue = null,
+        isInitialWelcome = false
+      ) {
+        const popupOverlay = document.getElementById("popup-overlay");
+        const popupTitle = popupOverlay.querySelector("h2");
+        const popupMessage = popupOverlay.querySelector("p");
+        const popupIcon = popupOverlay.querySelector(".popup-content > i");
+        const popupBtn = popupOverlay.querySelector(".popup-btn");
+
+        // 1. Update Icon Class and Animation
+        popupIcon.className = iconClass;
+        popupIcon.style.color = isInitialWelcome ? "#ff00cc" : "#00f2ea";
+        if (isInitialWelcome) {
+          popupIcon.classList.add("fa-shake");
+          popupBtn.innerHTML = '<i class="fa-solid fa-check"></i> យល់ព្រម';
+        } else {
+          popupIcon.classList.remove("fa-shake");
+          popupBtn.innerHTML = '<i class="fa-solid fa-check"></i> បិទ';
+        }
+
+        // 2. Update Content
+        popupTitle.innerHTML = title;
+        popupMessage.innerHTML = message;
+
+        // 3. Auto-copy logic
+        if (copyValue) {
+          // Since this is called right when the user clicks, we auto-copy the ID
+          navigator.clipboard
+            .writeText(copyValue)
+            .then(() => {
+              const copyMessageText = `✅ បានចម្លង ${title} ទុកហើយ!`;
+              showTemporaryCopyMessage(copyMessageText);
+            })
+            .catch((err) => {
+              console.error("Failed to copy ID: ", err);
+            });
+        }
+
+        // 4. Show Modal
+        popupOverlay.classList.add("active");
+      }
+
+      function closePopup() {
+        document.getElementById("popup-overlay").classList.remove("active");
+      }
+
+      // --- Script សម្រាប់ចុច Copy Link ---
+      function copyLink() {
+        const url = window.location.href;
+        // Use document.execCommand for better compatibility in some environments
+        if (document.execCommand("copy")) {
+          showTemporaryCopyMessage("✅ បានចម្លង Link ទុកហើយ! (Copied)");
+        } else {
+          // Fallback for browsers that support navigator.clipboard (but might be blocked in iframe)
+          navigator.clipboard
+            .writeText(url)
+            .then(() => {
+              showTemporaryCopyMessage("✅ បានចម្លង Link ទុកហើយ! (Copied)");
+            })
+            .catch((err) => {
+              console.error("Failed to copy: ", err);
+              showTemporaryCopyMessage("❌ មិនអាចចម្លងបានទេ!");
+            });
+        }
+      }
+
+      // --- Script សម្រាប់ Carousel រូបភាព ---
+      const carousel = document.getElementById("galleryCarousel");
+      let autoPlayInterval;
+
+      function moveCarousel(direction) {
+        if (!carousel.querySelector(".carousel-item")) return;
+
+        const itemWidth = carousel.querySelector(".carousel-item").clientWidth;
+        const gap = 10;
+
+        if (
+          direction === 1 &&
+          carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 5
+        ) {
+          carousel.scrollTo({ left: 0, behavior: "smooth" });
+        } else if (direction === -1 && carousel.scrollLeft <= 0) {
+          carousel.scrollTo({ left: carousel.scrollWidth, behavior: "smooth" });
+        } else {
+          carousel.scrollBy({
+            left: direction * (itemWidth + gap),
+            behavior: "smooth",
+          });
+        }
+
+        resetAutoPlay();
+      }
+
+      function startAutoPlay() {
+        autoPlayInterval = setInterval(() => {
+          moveCarousel(1);
+        }, 3000);
+      }
+
+      function resetAutoPlay() {
+        clearInterval(autoPlayInterval);
+        startAutoPlay();
+      }
+
+      startAutoPlay();
+
+      // --- Initial Popup on Load ---
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          showInfoModal(
+            "fa-solid fa-bell fa-3x", // iconClass
+            "ដំណឹងពិសេស! 🔥", // title
+            "កុំភ្លេចចុច Follow <strong>Telegram Channel</strong> របស់យើងខ្ញុំ ដើម្បីទទួលបានព័ត៌មានថ្មីៗ និងរង្វាន់ពិសេសមុនគេ!", // message
+            null, // copyValue: null
+            true // isInitialWelcome = true
+          );
+        }, 1500);
+      });
+    </script>
+  </body>
+</html>
